@@ -11,6 +11,13 @@ module.exports = {
         style: true
       },
       'vant'
+    ],
+    [
+      'component',
+      {
+        libraryName: 'element-ui',
+        styleLibraryName: 'theme-chalk'
+      }
     ]
   ]
 }

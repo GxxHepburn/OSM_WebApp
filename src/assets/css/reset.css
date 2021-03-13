@@ -84,8 +84,8 @@ html, body, #app{
     min-height: 100%;
 
     /* 解决边界的margin不生效或溢出问题 */
-    padding: 1px 0; /* no */
-    margin: -1px 0; /* no */
+    padding: 0 0; /* no */
+    margin: 0 0; /* no */
 }
 body{
   /* 解决 Ios 300毫秒延迟 */

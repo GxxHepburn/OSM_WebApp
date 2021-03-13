@@ -9,6 +9,9 @@ import './assets/css/global.css'
 // 导入移动端适配初始样式
 import './assets/css/reset.css'
 
+// 导入字体图标
+import './assets/fonts/iconfont.css'
+
 Vue.config.productionTip = false
 
 new Vue({
