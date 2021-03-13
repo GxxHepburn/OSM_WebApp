@@ -6,13 +6,21 @@
         <img src="../assets/logo.png">
       </div>
       <!-- 登陆表单区域 -->
-      <van-form @submit="login" class="login_form" :show-error-message="false" :show-error="true" validate-trigger="onSubmit">
+      <van-form ref="loginFormRef" @submit="login" class="login_form" :show-error-message="true" :show-error="false">
         <!-- 用户名 -->
         <van-field
           v-model="loginForm.username"
           name="用户名"
           placeholder="请输入用户名"
-          :rules="[{ required: true, message: '请填写用户名' }]">
+          :rules="[
+          { required: true, message: '请填写用户名', },
+          { validator: loginFormUsernameValidator, message: '手机号码必须为11位', },
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', }
+          ]"
+          :clearable="true"
+          :clickable="true"
+          size="large"
+          maxlength="11">
           <template v-slot:left-icon>
             <van-icon class="iconfont" class-prefix="icon" name="user" />
           </template>
@@ -23,14 +31,20 @@
           type="password"
           name="密码"
           placeholder="请输入密码"
-          :rules="[{ required: true, message: '请填写密码' }]">
+          :rules="[
+          { required: true, message: '请填写密码', },
+          { validator: loginFormPasswordValidator, message: '长度 6 到 15 个字符', }
+          ]"
+          :clearable="true"
+          :clickable="true"
+          maxlength="15">
           <template v-slot:left-icon>
             <van-icon class="iconfont" class-prefix="icon" name="3702mima" />
           </template>
         </van-field>
         <div class="btns">
           <van-button class="left_btn" size="large" square type="info" native-type="submit">登 录</van-button>
-          <van-button class="right_btn" size="large" square type="info" native-type="submit">重 置</van-button>
+          <van-button class="right_btn" size="large" square type="info" @click="resetLoginForm">重 置</van-button>
         </div>
       </van-form>
     </div>
@@ -48,6 +62,28 @@ export default {
     }
   },
   methods: {
+    // 重置标案
+    resetLoginForm () {
+      this.loginForm.username = ''
+      this.loginForm.password = ''
+    },
+    // 密码验证字符长度
+    loginFormPasswordValidator (val) {
+      if (val.length < 6 || val.length > 15) {
+        return false
+      } else {
+        return true
+      }
+    },
+    // 用户名验证字符长度
+    loginFormUsernameValidator (val) {
+      if (val.length !== 11) {
+        return false
+      } else {
+        return true
+      }
+    },
+    // 登陆方法
     login () {}
   }
 }
