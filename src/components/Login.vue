@@ -8,19 +8,19 @@
       <!-- 登陆表单区域 -->
       <van-form ref="loginFormRef" @submit="login" class="login_form" :show-error-message="true" :show-error="false">
         <!-- 用户名 -->
+        <!-- { validator: loginFormUsernameValidator, message: '手机号码必须为11位', },
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', }
+          maxlength="11" -->
         <van-field
           v-model="loginForm.username"
           name="用户名"
           placeholder="请输入用户名"
           :rules="[
           { required: true, message: '请填写用户名', },
-          { validator: loginFormUsernameValidator, message: '手机号码必须为11位', },
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', }
           ]"
           :clearable="true"
           :clickable="true"
-          size="large"
-          maxlength="11">
+          size="large">
           <template v-slot:left-icon>
             <van-icon class="iconfont" class-prefix="icon" name="user" />
           </template>
@@ -84,7 +84,42 @@ export default {
       }
     },
     // 登陆方法
-    login () {}
+    async login () {
+      const { data: res } = await this.$http.post('OSM/login', this.loginForm)
+      if (res.meta.status !== 200) {
+        if (res.meta.status === 401) {
+          this.$notify({
+            message: '请输入正确的用户名和密码！',
+            background: '#FEF0F0',
+            color: '#F56C6C',
+            height: '200px'
+          })
+          return
+        } else if (res.meta.status === 500) {
+          this.$message.error('发生未知错误，请重试或联系管理员')
+          return
+        } else if (res.meta.status === 201) {
+          // 弹出验证码框
+          this.checkDialogVisible = true
+          this.mmngct = res.data.mmngct
+          this.jwtString = res.data.token
+          return
+        }
+      }
+      // 登陆成功提示
+      this.$notify({
+        type: 'success',
+        message: '登陆成功'
+      })
+      // 1. 将登陆之后的 token，保存到客户端的 sessionStorage 中
+      //  1.1 项目中除了登陆之外的其他API接口，必须在登陆之后才能访问
+      //  1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
+      window.sessionStorage.setItem('token', res.data.token)
+      // 登陆成功后，保存管理者用户名，也就是唯一的电话号码
+      window.sessionStorage.setItem('mmngctUserName', this.loginForm.username)
+      // 2. 通过编程式导航跳转到后台主页， 路由地址是 /home
+      this.$router.push('/static/home')
+    }
   }
 }
 </script>
