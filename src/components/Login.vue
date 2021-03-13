@@ -12,6 +12,7 @@
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', }
           maxlength="11" -->
         <van-field
+          class="userNameInput"
           v-model="loginForm.username"
           name="用户名"
           placeholder="请输入用户名"
@@ -96,7 +97,12 @@ export default {
           })
           return
         } else if (res.meta.status === 500) {
-          this.$message.error('发生未知错误，请重试或联系管理员')
+          this.$notify({
+            message: '发生未知错误，请重试或联系管理员！',
+            background: '#FEF0F0',
+            color: '#F56C6C',
+            height: '200px'
+          })
           return
         } else if (res.meta.status === 201) {
           // 弹出验证码框
@@ -127,6 +133,7 @@ export default {
 <style lang="less" scoped>
 .iconfont{
   color: #C0C4CC;
+  font-size: 20px;/* no */
 }
 .login_container {
   background-color: #2b4b6b;
@@ -135,7 +142,7 @@ export default {
 .login_box {
   width: 510px;
   height: 340px;
-  background-color: #eee;
+  background-color: #2b4b6b;
   border-radius: 3px;
   position: absolute;
   left: 50%;
@@ -151,7 +158,7 @@ export default {
     box-shadow: 0 0 11.3px #ddd;
     position: absolute;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -80%);
     background-color: #fff;
     img {
       width: 100%;
@@ -161,6 +168,10 @@ export default {
       position: relative;
       left: 5%;
     }
+  }
+
+  .userNameInput {
+    margin-bottom: 50px;
   }
 }
 .btns {
@@ -185,6 +196,6 @@ export default {
   width: 100%;
   padding: 0 22.6px;
   box-sizing: border-box;
-  transform: translate(0, 70%);
+  transform: translate(0, 90%);
 }
 </style>
