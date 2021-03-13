@@ -1,6 +1,6 @@
 <template>
   <div class="login_container">
-    <div class="login_box">123</div>
+    <div class="login_box"></div>
   </div>
 </template>
 
@@ -14,12 +14,13 @@ export default {}
   height: 100%;
 }
 .login_box {
-  width: 15%;
-  height: 10%;
+  width: 510px;
+  height: 340px;
   background-color: #fff;
   border-radius: 3px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
 }
 </style>
