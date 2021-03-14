@@ -9,7 +9,10 @@ import {
   Dialog,
   CellGroup,
   Tabbar, TabbarItem,
-  Tabs, Tab
+  Tabs, Tab,
+  Sticky,
+  PullRefresh,
+  Card
 } from 'vant'
 
 Vue.use(Button)
@@ -24,3 +27,6 @@ Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Tabs)
 Vue.use(Tab)
+Vue.use(Sticky)
+Vue.use(PullRefresh)
+Vue.use(Card)
