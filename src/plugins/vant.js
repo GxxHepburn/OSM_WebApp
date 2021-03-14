@@ -8,7 +8,8 @@ import {
   Notify,
   Dialog,
   CellGroup,
-  Tabbar, TabbarItem
+  Tabbar, TabbarItem,
+  Tabs, Tab
 } from 'vant'
 
 Vue.use(Button)
@@ -21,3 +22,5 @@ Vue.use(Dialog)
 Vue.use(CellGroup)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
+Vue.use(Tabs)
+Vue.use(Tab)

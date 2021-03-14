@@ -1,8 +1,6 @@
 <template>
   <div class="home-container">
-      <div>
-        <router-view :key="$route.path"></router-view>
-      </div>
+      <router-view :key="$route.path"></router-view>
       <van-tabbar v-model="active" :route="true">
         <van-tabbar-item icon="add-o" to="/static/menuHome">菜单</van-tabbar-item>
         <van-tabbar-item icon="orders-o" to="/static/orderHome">订单</van-tabbar-item>
@@ -22,5 +20,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.home-container {
+  height: 100%;
+}
 </style>
