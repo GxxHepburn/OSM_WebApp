@@ -7,7 +7,8 @@ import {
   Toast,
   Notify,
   Dialog,
-  CellGroup
+  CellGroup,
+  Tabbar, TabbarItem
 } from 'vant'
 
 Vue.use(Button)
@@ -18,3 +19,5 @@ Vue.prototype.$toast = Toast
 Vue.prototype.$notify = Notify
 Vue.use(Dialog)
 Vue.use(CellGroup)
+Vue.use(Tabbar)
+Vue.use(TabbarItem)
