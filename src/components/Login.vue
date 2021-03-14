@@ -6,7 +6,7 @@
         <img src="../assets/logo.png">
       </div>
       <!-- 登陆表单区域 -->
-      <van-form ref="loginFormRef" @submit="login" class="login_form" :show-error-message="true" :show-error="false">
+      <van-form ref="loginFormRef" v-model="loginForm" @submit="login" class="login_form" :show-error-message="true" :show-error="false">
         <!-- 用户名 -->
         <!-- { validator: loginFormUsernameValidator, message: '手机号码必须为11位', },
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', }
@@ -49,6 +49,28 @@
         </div>
       </van-form>
     </div>
+    <!-- 验证码弹窗 -->
+    <van-dialog v-model="checkDialogVisible" class="checkDialog" :show-confirm-button="false" :show-cancel-button="true"
+      cancel-button-color="#ee0a24">
+      <p class="checkDialogTips">您的账号已经绑定手机{{mmngct.MMA_Phone}},您需要通过短信验证码登陆账号</p>
+      <van-form @submit="getCheckNumButtonClick" class="checkDialogForm" v-model="checkForm">
+        <div class="phone_wrap">
+          <span class="left_phone">手 机 号:</span>
+          <span>{{mmngct.MMA_Phone}}</span>
+        </div>
+        <div class="check_wrap">
+          <van-field
+            class="checkNumInput"
+            v-model="checkForm.checkNum"
+            label="验证码"
+            label-width="62"
+            colon
+            maxlength="6"/>
+          <van-button  class="getCheckNumButton" :disabled="checkDialogButtonDisalbe" size="small" hairline plain  square type="info" native-type="submit">{{checkNumButtonText}}</van-button>
+        </div>
+      </van-form>
+      <van-button class="checkDialogConfirmButton" size="normal"  square type="info" @click="realCheckNumButtonClick">确 定</van-button>
+    </van-dialog>
   </div>
 </template>
 
@@ -56,13 +78,91 @@
 export default {
   data () {
     return {
+      checkNumButtonText: '获取验证码',
+      checkDialogButtonDisalbe: false,
+      jwtString: '',
+      mmngct: '',
+      // 验证码弹窗控制
+      checkDialogVisible: false,
+      // 验证码
+      checkForm: {
+        checkNum: ''
+      },
       loginForm: {
-        username: '',
-        password: ''
+        username: 'DianCaiBaoTest',
+        password: 'DianCaiBao123'
       }
     }
   },
   methods: {
+    // 发送验证码
+    async getCheckNumButtonClick () {
+      // 发送获取验证码逻辑,需要携带token（在heaers中)
+      const { data: res } = await this.$http.post('OSM/sendCheck', this.mmngct, {
+        headers: {
+          Authorization: this.jwtString
+        }
+      })
+      if (res.meta.status !== 200) {
+        // 根据阿里云返回的情况，要分别提示
+        this.$notify({
+          message: res.meta.msg,
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
+        return
+      }
+
+      // 计时器计时
+      this.checkDialogButtonDisalbe = true
+      const TIME_COUNT = 60
+      this.checkNumButtonText = TIME_COUNT
+      var timer = setInterval(() => {
+        if (this.checkNumButtonText > 0) {
+          this.checkNumButtonText--
+        } else {
+          this.checkDialogButtonDisalbe = false
+          this.checkNumButtonText = '获取验证码'
+          clearInterval(timer)
+        }
+      }, 1000)
+      this.$notify({
+        message: res.meta.msg,
+        background: '#F0F9EB',
+        color: '#67C23A'
+      })
+    },
+    // 验证登陆
+    async realCheckNumButtonClick () {
+      this.mmngct.checkNum = this.checkForm.checkNum
+      const { data: res } = await this.$http.post('OSM/realCheck', this.mmngct, {
+        headers: {
+          Authorization: this.jwtString
+        }
+      })
+      if (res.meta.status !== 200) {
+        this.$notify({
+          message: res.meta.msg,
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
+        return
+      }
+      // 登陆成功，设置token
+      this.$notify({
+        message: '登陆成功',
+        background: '#F0F9EB',
+        color: '#67C23A'
+      })
+      // 1. 将登陆之后的 token，保存到客户端的 sessionStorage 中
+      //  1.1 项目中除了登陆之外的其他API接口，必须在登陆之后才能访问
+      //  1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
+      window.sessionStorage.setItem('token', this.jwtString)
+      // 登陆成功后，保存管理者用户名，也就是唯一的电话号码
+      window.sessionStorage.setItem('mmngctUserName', this.loginForm.username)
+      // 2. 通过编程式导航跳转到后台主页， 路由地址是 /home
+      this.$router.push('/static/home')
+    },
     // 重置标案
     resetLoginForm () {
       this.loginForm.username = ''
@@ -92,16 +192,14 @@ export default {
           this.$notify({
             message: '请输入正确的用户名和密码！',
             background: '#FEF0F0',
-            color: '#F56C6C',
-            height: '200px'
+            color: '#F56C6C'
           })
           return
         } else if (res.meta.status === 500) {
           this.$notify({
             message: '发生未知错误，请重试或联系管理员！',
             background: '#FEF0F0',
-            color: '#F56C6C',
-            height: '200px'
+            color: '#F56C6C'
           })
           return
         } else if (res.meta.status === 201) {
@@ -114,8 +212,9 @@ export default {
       }
       // 登陆成功提示
       this.$notify({
-        type: 'success',
-        message: '登陆成功'
+        message: '登陆成功',
+        background: '#F0F9EB',
+        color: '#67C23A'
       })
       // 1. 将登陆之后的 token，保存到客户端的 sessionStorage 中
       //  1.1 项目中除了登陆之外的其他API接口，必须在登陆之后才能访问
@@ -131,6 +230,44 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .van-cell::after{
+  border-bottom-width: 0;
+}
+/deep/ .van-hairline--top::after {
+  border-top-width: 0;
+}
+.checkDialogConfirmButton {
+  width: 80%;
+  border-radius: 5px;
+  margin-left: 10%;
+  margin-top: 5%;
+}
+.checkDialogTips {
+  text-align: center;
+  padding: 0 5%;
+  padding-top: 2%;
+  font-size: 10px;
+}
+.check_wrap {
+  display: flex;
+  button {
+    width: 40%;
+    margin-left: 4%;/* no */
+    margin-right: 6%;/* no */
+    margin-top: 2%;
+  }
+}
+.phone_wrap {
+  padding: 10px 16px;/* no */
+  .left_phone {
+    padding-right: 20px;
+  }
+}
+.checkNumInput {
+  /deep/ .van-cell__value {
+    border: 1px solid #eee;
+  }
+}
 .iconfont{
   color: #C0C4CC;
   font-size: 20px;/* no */

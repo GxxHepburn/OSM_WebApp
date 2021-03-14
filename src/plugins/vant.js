@@ -5,7 +5,9 @@ import {
   Field,
   Icon,
   Toast,
-  Notify
+  Notify,
+  Dialog,
+  CellGroup
 } from 'vant'
 
 Vue.use(Button)
@@ -14,3 +16,5 @@ Vue.use(Field)
 Vue.use(Icon)
 Vue.prototype.$toast = Toast
 Vue.prototype.$notify = Notify
+Vue.use(Dialog)
+Vue.use(CellGroup)
