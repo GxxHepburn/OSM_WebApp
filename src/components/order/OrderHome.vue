@@ -6,7 +6,7 @@
       <div class="order_total_title-out">外 卖</div>
       <van-icon class="search_my" name="search" />
     </div>
-    <van-tabs swipeable
+    <van-tabs swipeable sticky
       color="#fff" title-active-color="#fff"
       title-inactive-color="#fff">
       <van-tab title="全部">
@@ -79,7 +79,7 @@ export default {
       totalPayStatus: '',
       totalTabId: '',
       totalPageNum: 1,
-      totalSize: 10,
+      totalSize: 3,
       mmngctUserName: window.sessionStorage.mmngctUserName,
 
       totalDetailFormList: []
@@ -88,6 +88,9 @@ export default {
   methods: {
     // total List异步加载
     async onTotalListLoad () {
+      if (this.isTotalListFinished) {
+        return
+      }
       const { data: res } = await this.$http.post('OSM/getOrderFormList', {
         mmngctUserName: this.mmngctUserName,
         pagenum: this.totalPageNum,
@@ -104,13 +107,24 @@ export default {
       })
       if (res.meta.status !== 200) {
         this.$message.error('获取订单数据失败!')
-        // 怎么设置 boolean
+        // 加载失败，点击后重新触发load事件
+        this.isTotalListError = true
+        // 加载和下拉状态结束
+        this.isTotalRefreshLoading = this.isTotalListLoading = false
         return
       }
-      this.totalFormList = res.data.orderFormList
+      this.totalFormList = this.totalFormList.concat(res.data.orderFormList)
+      this.isTotalRefreshLoading = this.isTotalListLoading = false
+      this.isTotalListFinished = res.data.orderFormList.length < 3
+      this.isTotalListError = false
+      this.totalPageNum++
     },
     // total下拉刷新
     async onRefreshTotal () {
+      this.totalFormList = []
+      this.totalPageNum = 1
+      this.isTotalListFinished = false
+      this.onTotalListLoad()
     }
   }
 }
@@ -262,15 +276,9 @@ export default {
     border-radius: 3px;/* no */
   }
 }
-/deep/ .van-list {
-  padding-left: 10px;/* no */
-  padding-right: 10px;/* no */
-  padding-top: 10px;/* no */
-  padding-bottom: 10px;/* no */
-}
 .my_card_wrap {
   background-color: #fff;
-  margin-top: 15px;/* no */
+  margin-bottom: 15px;/* no */
   border-radius: 5px;/* no */
 }
 .order_total_title-in {
@@ -332,13 +340,16 @@ export default {
   height: 100%;
   background-color: #eee;
 }
+/deep/ .van-tabs__wrap {
+  margin-bottom: 20px;/* no */
+}
 /deep/ .van-tabs__nav {
   background-color: #000;
   background: linear-gradient(to right, #FF9829, #FF601C);
   padding-bottom: 2.3%;
 }
 /deep/ .van-tabs {
-  height: 80%;
+  height: 75%;
 }
 /deep/ .van-tabs__content {
   height: 100%;
@@ -347,6 +358,14 @@ export default {
   height: 100%;
 }
 /deep/ .van-pull-refresh {
+  height: 100%;
+  overflow: auto;
+}
+
+/deep/ .van-list {
+  padding-left: 10px;/* no */
+  padding-right: 10px;/* no */
+  padding-bottom: 10px;/* no */
   height: 100%;
 }
 </style>
