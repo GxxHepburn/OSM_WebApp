@@ -45,7 +45,8 @@
                   <div class="value">{{item.O_UniqSearchID}}</div>
                 </div>
               </div>
-              <div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -116,6 +117,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.order-print-wrap {
+  padding-bottom: 10px;/* no */
+  padding-left: 5px;/* no */
+  padding-right: 5px;/* no */
+  .van-button {
+    border:  1px solid #67B3A9;/* no */
+    border-radius: 5px;/* no */
+    height: 28px;/* no */
+    color: #67B3A9;
+    font-size: 13px;/* no */
+  }
+}
 .order-info-wrap {
   padding-left: 10px;/* no */
   padding-right: 10px;/* no */
