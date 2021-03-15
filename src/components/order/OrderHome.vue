@@ -1,7 +1,10 @@
 <template>
   <div class="order_total_container">
     <div class="search-container">
-      <van-icon name="filter-o" />
+      <van-icon class="filter_my" name="filter-o" />
+      <div class="order_total_title-in">堂 食</div>
+      <div class="order_total_title-out">外 卖</div>
+      <van-icon class="search_my" name="search" />
     </div>
     <van-tabs swipeable
       color="#fff" title-active-color="#fff"
@@ -39,13 +42,59 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.order_total_title-in {
+  display: inline-block;
+  color: #FF9829;
+  background-color: #fff;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-100%, -50%);
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 25px;
+  vertical-align: middle;
+}
+.order_total_title-out {
+  display: inline-block;
+  color: #fff;
+  background-color: #FF601C;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-1%, -50%);
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 25px;
+  vertical-align: middle;
+}
 .search-container {
   height: 6%;
   background: linear-gradient(to right, #FF9829, #FF601C);
-  .van-icon {
+  position: relative;
+  .filter_my {
     color: #fff;
-    margin-left: 3%;
-    vertical-align: middle;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(80%, -50%);
+  }
+  .search_my {
+    color: #fff;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(-80%, -50%);
   }
 }
 .order_total_container {
