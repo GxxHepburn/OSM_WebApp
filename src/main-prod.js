@@ -11,6 +11,10 @@ import './assets/fonts/iconfont.css'
 
 import axios from 'axios'
 axios.defaults.baseURL = 'https://www.donghuastar.com/'
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false

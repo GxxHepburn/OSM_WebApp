@@ -12,7 +12,8 @@ import {
   Tabs, Tab,
   Sticky,
   PullRefresh,
-  Card
+  Card,
+  List
 } from 'vant'
 
 Vue.use(Button)
@@ -30,3 +31,4 @@ Vue.use(Tab)
 Vue.use(Sticky)
 Vue.use(PullRefresh)
 Vue.use(Card)
+Vue.use(List)
