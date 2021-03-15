@@ -13,7 +13,9 @@ import {
   Sticky,
   PullRefresh,
   Card,
-  List
+  List,
+  Collapse,
+  CollapseItem
 } from 'vant'
 
 Vue.use(Button)
@@ -32,3 +34,5 @@ Vue.use(Sticky)
 Vue.use(PullRefresh)
 Vue.use(Card)
 Vue.use(List)
+Vue.use(Collapse)
+Vue.use(CollapseItem)

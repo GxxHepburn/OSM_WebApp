@@ -21,12 +21,29 @@
                 <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
                 <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
               </div>
-              <div>
-                <div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
                 </div>
                 <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
               </div>
-              <div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
               </div>
               <div>
               </div>
@@ -62,7 +79,9 @@ export default {
       totalTabId: '',
       totalPageNum: 1,
       totalSize: 10,
-      mmngctUserName: window.sessionStorage.mmngctUserName
+      mmngctUserName: window.sessionStorage.mmngctUserName,
+
+      totalDetailFormList: []
     }
   },
   methods: {
@@ -97,6 +116,78 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.order-info-wrap {
+  padding-left: 10px;/* no */
+  padding-right: 10px;/* no */
+  padding-top: 5px;/* no */
+  padding-bottom: 15px;/* no */
+  border-bottom: 1px solid #ddd;/* no */
+  .order-info-time-content-wrap {
+    display: flex;
+    .label {
+      font-size: 13px;/* no */
+      color: #848484;
+    }
+    .value {
+      font-size: 12px;/* no */
+      transform: translate(0, 15%);
+      color: #a9a9a9;
+    }
+  }
+  .order-info-osid-content-wrap {
+    display: flex;
+    .label {
+      font-size: 13px;/* no */
+      color: #848484;
+    }
+    .value {
+      font-size: 12px;/* no */
+      transform: translate(0, 15%);
+      color: #505050;
+    }
+  }
+}
+.order-detail-wrap {
+  padding-left: 10px;/* no */
+  padding-right: 10px;/* no */
+  padding-top: 20px;/* no */
+  /deep/ .van-collapse-item__title {
+    border-top-right-radius: 5px;/* no */
+    border-top-left-radius: 5px;/* no */
+    background-color: #eee;
+    position: relative;
+    padding-top: 2px;/* no */
+    padding-bottom: 5px;/* no */
+    .records_icon {
+      font-size: 25px;/* no */
+      color: #1982EB;
+      position: relative;
+      transform: translate(0, 20%);
+    }
+    .order-detail-info-title {
+      font-size: 14px;/* no */
+      font-weight: bold;
+    }
+  }
+  /deep/ .van-collapse-item__content{
+    background-color: #eee;
+    border-bottom-left-radius: 5px;/* no */
+    border-bottom-right-radius: 5px;/* no */
+    border-top: 1px solid #ddd;
+  }
+  .order-detail-content_border_my {
+    height: 1px;/* no */
+    width: 100%;
+    background: #ddd;
+  }
+  .price {
+    color: #FF601C;
+    font-size: 17px;/* no */
+    border-bottom: 1px solid #ddd;
+    padding-top: 10px;/* no */
+    padding-bottom: 10px;/* no */
+  }
+}
 .tab-wrap {
   height: 40px;/* no */
   border-bottom: 1px solid #eee;/* no */
@@ -166,7 +257,7 @@ export default {
 }
 .my_card_wrap {
   background-color: #fff;
-  margin-top: 10px;/* no */
+  margin-top: 15px;/* no */
   border-radius: 5px;/* no */
 }
 .order_total_title-in {
@@ -226,7 +317,7 @@ export default {
 }
 .order_total_container {
   height: 100%;
-  background-color: #EBEBEB;
+  background-color: #eee;
 }
 /deep/ .van-tabs__nav {
   background-color: #000;
