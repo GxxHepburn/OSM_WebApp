@@ -274,10 +274,17 @@
     </van-tabs>
     <van-popup get-container=".order_total_container" v-model="showTabSelect" position="right" :style="{ height: '100%', width: '100%' }">
       <div class="search-container">
-      <van-icon @click="hideTabSelect" class="filter_my" name="arrow-left" />
-      <span class="tabSelect_title">按桌位搜索</span>
-      <span @click="hideTabSelect" class="confirm_hide">确认</span>
-    </div>
+        <van-icon @click="hideTabSelect" class="filter_my" name="arrow-left" />
+        <span class="tabSelect_title">按桌位搜索</span>
+        <span @click="hideTabSelect" class="confirm_hide">确认</span>
+      </div>
+      <van-tree-select class="tab-tree-select"
+        :items="tabtypeList"
+        :active-id.sync="totalTabId"
+        :main-active-index.sync="tabtypeId"
+        height="94%"
+        @click-item="clickRealSelectTab"
+      />
     </van-popup>
   </div>
 </template>
@@ -304,10 +311,45 @@ export default {
 
       totalDetailFormList: [],
 
-      showTabSelect: false
+      showTabSelect: false,
+
+      tabtypeId: '',
+
+      tabtypeList: []
     }
   },
+  created () {
+    this.getTabAndTabTypeOptions()
+  },
   methods: {
+    // 选择餐桌
+    clickRealSelectTab ($data) {
+      // pullrefresh
+      this.totalTabId = $data.id
+      // 初始化查询条件
+      this.totalO_UniqSearchID = ''
+      this.totalO_StartString = ''
+      this.totalO_EndString = ''
+
+      this.totalFormList = []
+      this.totalDetailFormList = []
+      this.totalPageNum = 1
+      this.isTotalListFinished = false
+      this.onTotalListLoad()
+      // 退出
+      this.hideTabSelect()
+    },
+    // 获取餐桌数据
+    async getTabAndTabTypeOptions () {
+      const { data: res } = await this.$http.post('OSMAPP/ordersTabAndTabTypeOptions', {
+        mmngctUserName: window.sessionStorage.mmngctUserName
+      })
+      if (res.meta.status !== 200) {
+        this.$message.error('获取餐桌数据失败!')
+        return
+      }
+      this.tabtypeList = res.data.ordersTabAndTabTypeOptions
+    },
     // 从餐桌选择器返回
     hideTabSelect () {
       this.showTabSelect = false
@@ -358,10 +400,11 @@ export default {
     },
     // 获取未接单数据
     async getNotTakingOrders () {
-      const { data: res } = await this.$http.post('OSM/notTakingOrerAddFormList', {
+      const { data: res } = await this.$http.post('OSMAPP/notTakingOrerAddFormList', {
         mmngctUserName: this.mmngctUserName,
         pagenum: this.totalPageNum,
-        pagesize: this.totalSize
+        pagesize: this.totalSize,
+        totalTabId: this.totalTabId
       })
       if (res.meta.status !== 200) {
         // 加载失败，点击后重新触发load事件
@@ -415,6 +458,12 @@ export default {
     },
     // total下拉刷新
     async onRefreshTotal () {
+      // 初始化查询条件
+      this.totalO_UniqSearchID = ''
+      this.totalO_StartString = ''
+      this.totalO_EndString = ''
+      this.totalTabId = ''
+
       this.totalFormList = []
       this.totalDetailFormList = []
       this.totalPageNum = 1

@@ -17,7 +17,8 @@ import {
   Collapse,
   CollapseItem,
   Switch,
-  Popup
+  Popup,
+  TreeSelect
 } from 'vant'
 
 Vue.use(Button)
@@ -40,3 +41,4 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Switch)
 Vue.use(Popup)
+Vue.use(TreeSelect)
