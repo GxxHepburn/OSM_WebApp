@@ -1,7 +1,7 @@
 <template>
   <div class="order_total_container">
     <div class="search-container">
-      <van-icon class="filter_my" name="filter-o" />
+      <van-icon @click="clickShowTabSelect" class="filter_my" name="filter-o" />
       <div class="order_total_title-in">堂 食</div>
       <div class="order_total_title-out">外 卖</div>
       <van-icon class="search_my" name="search" />
@@ -272,6 +272,13 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <van-popup get-container=".order_total_container" v-model="showTabSelect" position="right" :style="{ height: '100%', width: '100%' }">
+      <div class="search-container">
+      <van-icon @click="hideTabSelect" class="filter_my" name="arrow-left" />
+      <span class="tabSelect_title">按桌位搜索</span>
+      <span @click="hideTabSelect" class="confirm_hide">确认</span>
+    </div>
+    </van-popup>
   </div>
 </template>
 
@@ -295,10 +302,20 @@ export default {
       totalSize: 10,
       mmngctUserName: window.sessionStorage.mmngctUserName,
 
-      totalDetailFormList: []
+      totalDetailFormList: [],
+
+      showTabSelect: false
     }
   },
   methods: {
+    // 从餐桌选择器返回
+    hideTabSelect () {
+      this.showTabSelect = false
+    },
+    // 点击弹出餐桌选择器
+    clickShowTabSelect ($event) {
+      this.showTabSelect = true
+    },
     // 接单按钮
     async takingOrder (event, item) {
       const { data: res } = await this.$http.post('OSM/takingOrder', item)
@@ -645,16 +662,35 @@ export default {
     position: absolute;
     left: 0;
     top: 50%;
-    font-size: 24px;/* no */
-    transform: translate(80%, -50%);
+    font-size: 20px;/* no */
+    transform: translate(80%, -60%);
+  }
+  .filter_my:active, .search_my:active, .confirm_hide:active{
+    color: #bbb;
   }
   .search_my {
     color: #fff;
     position: absolute;
     right: 0;
     top: 50%;
-    font-size: 24px;/* no */
-    transform: translate(-80%, -50%);
+    font-size: 20px;/* no */
+    transform: translate(-80%, -60%);
+  }
+  .confirm_hide {
+    color: #fff;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    font-size: 15px;/* no */
+    transform: translate(-50%, -60%);
+  }
+  .tabSelect_title {
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 16px;/* no */
+    transform: translate(-50%, -60%);
   }
 }
 .order_total_container {

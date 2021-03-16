@@ -16,7 +16,8 @@ import {
   List,
   Collapse,
   CollapseItem,
-  Switch
+  Switch,
+  Popup
 } from 'vant'
 
 Vue.use(Button)
@@ -38,3 +39,4 @@ Vue.use(List)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Switch)
+Vue.use(Popup)
