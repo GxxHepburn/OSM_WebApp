@@ -6,7 +6,7 @@
       <div class="order_total_title-out">外 卖</div>
       <van-icon class="search_my" name="search" />
     </div>
-    <van-tabs swipeable sticky
+    <van-tabs swipeable sticky animated
       color="#fff" title-active-color="#fff"
       title-inactive-color="#fff"
       @change="changeTab">
@@ -34,7 +34,7 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.O_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -59,11 +59,11 @@
             @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
             <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
               <div class="tab-wrap">
-                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
-                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
-                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
-                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
-                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.t_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.o_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.o_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.o_PayStatue===2">{{item.o_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.o_PayStatue===3">未完成</div>
               </div>
               <div class="order-detail-wrap">
                 <div class="order-detail-content-wrap">
@@ -77,16 +77,16 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.o_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
                   <div class="label">下单：</div>
-                  <div class="value">{{item.O_OrderingTime}}</div>
+                  <div class="value">{{item.OA_OrderingTime}}</div>
                 </div>
                 <div class="order-info-osid-content-wrap">
                   <div class="label">单号：</div>
-                  <div class="value">{{item.O_UniqSearchID}}</div>
+                  <div class="value">{{item.o_UniqSearchID}}</div>
                 </div>
               </div>
               <div class="order-print-wrap">
@@ -120,7 +120,7 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.O_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -163,7 +163,7 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.O_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -206,7 +206,7 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.O_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -249,7 +249,7 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+                <div class="price">￥{{parseFloat(item.O_TotlePrice).toFixed(2)}}</div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -306,6 +306,7 @@ export default {
       this.totalO_StartString = ''
       this.totalO_EndString = ''
       this.totalTabId = ''
+      this.totalDetailFormList = []
       this.onRefreshTotal()
     },
     // total List异步加载
@@ -313,7 +314,35 @@ export default {
       if (this.isTotalListFinished) {
         return
       }
-      this.getOrders()
+      if (this.totalPayStatus === '4') {
+        this.getNotTakingOrders()
+      } else {
+        this.getOrders()
+      }
+    },
+    // 获取未接单数据
+    async getNotTakingOrders () {
+      const { data: res } = await this.$http.post('OSM/notTakingOrerAddFormList', {
+        mmngctUserName: this.mmngctUserName,
+        pagenum: this.totalPageNum,
+        pagesize: this.totalSize
+      })
+      if (res.meta.status !== 200) {
+        // 加载失败，点击后重新触发load事件
+        this.isTotalListError = true
+        // 加载和下拉状态结束
+        this.isTotalRefreshLoading = this.isTotalListLoading = false
+        return
+      }
+      // 检查是否重复，如果重复就丢掉
+      if (this.isInNotTakingFormList(res.data.notTakingOrerAddFormList[0])) {
+        return
+      }
+      this.totalFormList = this.totalFormList.concat(res.data.notTakingOrerAddFormList)
+      this.isTotalRefreshLoading = this.isTotalListLoading = false
+      this.isTotalListFinished = res.data.notTakingOrerAddFormList.length < 10
+      this.isTotalListError = false
+      this.totalPageNum++
     },
     // 获取数据
     async getOrders () {
@@ -351,14 +380,37 @@ export default {
     // total下拉刷新
     async onRefreshTotal () {
       this.totalFormList = []
+      this.totalDetailFormList = []
       this.totalPageNum = 1
       this.isTotalListFinished = false
       this.onTotalListLoad()
     },
     // 判断订单是否在数组中
     isInTotalFormList (item) {
+      // 先检查是不是空list
+      if (item === undefined) {
+        this.isTotalRefreshLoading = this.isTotalListLoading = false
+        this.isTotalListFinished = true
+        this.isTotalListError = false
+        return true
+      }
       for (var i = 0; i < this.totalFormList.length; i++) {
         if (this.totalFormList[i].O_UniqSearchID === item.O_UniqSearchID) {
+          return true
+        }
+      }
+      return false
+    },
+    isInNotTakingFormList (item) {
+      // 先检查是不是空list导致item undefined
+      if (item === undefined) {
+        this.isTotalRefreshLoading = this.isTotalListLoading = false
+        this.isTotalListFinished = true
+        this.isTotalListError = false
+        return true
+      }
+      for (var i = 0; i < this.totalFormList.length; i++) {
+        if (this.totalFormList[i].OA_ID === item.OA_ID) {
           return true
         }
       }
