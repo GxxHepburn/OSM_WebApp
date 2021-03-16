@@ -8,8 +8,9 @@
     </div>
     <van-tabs swipeable sticky
       color="#fff" title-active-color="#fff"
-      title-inactive-color="#fff">
-      <van-tab title="全部">
+      title-inactive-color="#fff"
+      @change="changeTab">
+      <van-tab title="全部" name=''>
         <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
           <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
             @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
@@ -52,12 +53,221 @@
           </van-list>
         </van-pull-refresh>
       </van-tab>
-      <van-tab title="待接单">2</van-tab>
-      <van-tab title="未支付">3</van-tab>
-      <van-tab title="部分退款">4</van-tab>
-      <van-tab title="全额退款">5</van-tab>
-      <van-tab title="未完成">6</van-tab>
-      <van-tab title="已完成">7</van-tab>
+      <van-tab title="待接单" name='4'>
+        <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
+          <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
+            @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
+            <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
+              <div class="tab-wrap">
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+              </div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
+                </div>
+                <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+              </div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
+              </div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
+      <van-tab title="未支付" name='0'>
+        <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
+          <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
+            @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
+            <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
+              <div class="tab-wrap">
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+              </div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
+                </div>
+                <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+              </div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
+              </div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
+      <van-tab title="退款" name='2'>
+        <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
+          <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
+            @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
+            <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
+              <div class="tab-wrap">
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+              </div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
+                </div>
+                <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+              </div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
+              </div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
+      <van-tab title="未完成" name='3'>
+        <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
+          <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
+            @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
+            <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
+              <div class="tab-wrap">
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+              </div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
+                </div>
+                <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+              </div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
+              </div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
+      <van-tab title="已完成" name='1'>
+        <van-pull-refresh v-model="isTotalRefreshLoading" @refresh="onRefreshTotal">
+          <van-list v-model="isTotalListLoading" :finished="isTotalListFinished" finished-text="没有更多订单..."
+            @load="onTotalListLoad" error-text="请求失败,点击重新加载" :error.sync="isTotalListError">
+            <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
+              <div class="tab-wrap">
+                <div class="tab-info">桌号：{{item.TT_Name}}-{{item.T_Name}}</div>
+                <div class="tab-order-status-0" v-if="item.O_PayStatue===0">未付款</div>
+                <div class="tab-order-status-1" v-if="item.O_PayStatue===1">已完成</div>
+                <div class="tab-order-status-2" v-if="item.O_PayStatue===2">{{item.O_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
+                <div class="tab-order-status-3" v-if="item.O_PayStatue===3">未完成</div>
+              </div>
+              <div class="order-detail-wrap">
+                <div class="order-detail-content-wrap">
+                  <van-collapse v-model="totalDetailFormList[$index]" accordion>
+                    <van-collapse-item name="商品详情">
+                      <template #title>
+                        <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
+                      </template>
+                      内容
+                    </van-collapse-item>
+                  </van-collapse>
+                </div>
+                <!-- 金额 -->
+                <div class="price">￥{{item.O_TotlePrice.toFixed(2)}}</div>
+              </div>
+              <div class="order-info-wrap">
+                <div class="order-info-time-content-wrap">
+                  <div class="label">下单：</div>
+                  <div class="value">{{item.O_OrderingTime}}</div>
+                </div>
+                <div class="order-info-osid-content-wrap">
+                  <div class="label">单号：</div>
+                  <div class="value">{{item.O_UniqSearchID}}</div>
+                </div>
+              </div>
+              <div class="order-print-wrap">
+                <van-button size="large">打印</van-button>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
     </van-tabs>
   </div>
 </template>
@@ -79,18 +289,34 @@ export default {
       totalPayStatus: '',
       totalTabId: '',
       totalPageNum: 1,
-      totalSize: 3,
+      totalSize: 10,
       mmngctUserName: window.sessionStorage.mmngctUserName,
 
-      totalDetailFormList: []
+      totalDetailFormList: [],
+
+      timer: null
     }
   },
   methods: {
+    // 切换tab
+    changeTab (name, title) {
+      this.totalPayStatus = name
+      // 初始化查询条件
+      this.totalO_UniqSearchID = ''
+      this.totalO_StartString = ''
+      this.totalO_EndString = ''
+      this.totalTabId = ''
+      this.onRefreshTotal()
+    },
     // total List异步加载
-    async onTotalListLoad () {
+    onTotalListLoad () {
       if (this.isTotalListFinished) {
         return
       }
+      this.getOrders()
+    },
+    // 获取数据
+    async getOrders () {
       const { data: res } = await this.$http.post('OSM/getOrderFormList', {
         mmngctUserName: this.mmngctUserName,
         pagenum: this.totalPageNum,
@@ -106,16 +332,19 @@ export default {
         TabTypeId: ''
       })
       if (res.meta.status !== 200) {
-        this.$message.error('获取订单数据失败!')
         // 加载失败，点击后重新触发load事件
         this.isTotalListError = true
         // 加载和下拉状态结束
         this.isTotalRefreshLoading = this.isTotalListLoading = false
         return
       }
+      // 检查是否重复，如果重复就丢掉
+      if (this.isInTotalFormList(res.data.orderFormList[0])) {
+        return
+      }
       this.totalFormList = this.totalFormList.concat(res.data.orderFormList)
       this.isTotalRefreshLoading = this.isTotalListLoading = false
-      this.isTotalListFinished = res.data.orderFormList.length < 3
+      this.isTotalListFinished = res.data.orderFormList.length < 10
       this.isTotalListError = false
       this.totalPageNum++
     },
@@ -125,6 +354,15 @@ export default {
       this.totalPageNum = 1
       this.isTotalListFinished = false
       this.onTotalListLoad()
+    },
+    // 判断订单是否在数组中
+    isInTotalFormList (item) {
+      for (var i = 0; i < this.totalFormList.length; i++) {
+        if (this.totalFormList[i].O_UniqSearchID === item.O_UniqSearchID) {
+          return true
+        }
+      }
+      return false
     }
   }
 }
@@ -349,7 +587,7 @@ export default {
   padding-bottom: 2.3%;
 }
 /deep/ .van-tabs {
-  height: 75%;
+  height: 76%;
 }
 /deep/ .van-tabs__content {
   height: 100%;
