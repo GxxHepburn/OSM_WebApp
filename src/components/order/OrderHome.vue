@@ -645,6 +645,7 @@ export default {
     position: absolute;
     left: 0;
     top: 50%;
+    font-size: 24px;/* no */
     transform: translate(80%, -50%);
   }
   .search_my {
@@ -652,6 +653,7 @@ export default {
     position: absolute;
     right: 0;
     top: 50%;
+    font-size: 24px;/* no */
     transform: translate(-80%, -50%);
   }
 }
