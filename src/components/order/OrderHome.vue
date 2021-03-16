@@ -324,6 +324,8 @@ export default {
   methods: {
     // 选择餐桌
     clickRealSelectTab ($data) {
+      // 退出
+      this.hideTabSelect()
       // pullrefresh
       this.totalTabId = $data.id
       // 初始化查询条件
@@ -336,8 +338,6 @@ export default {
       this.totalPageNum = 1
       this.isTotalListFinished = false
       this.onTotalListLoad()
-      // 退出
-      this.hideTabSelect()
     },
     // 获取餐桌数据
     async getTabAndTabTypeOptions () {
