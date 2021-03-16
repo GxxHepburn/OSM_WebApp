@@ -77,7 +77,10 @@
                   </van-collapse>
                 </div>
                 <!-- 金额 -->
-                <div class="price">￥{{parseFloat(item.o_TotlePrice).toFixed(2)}}</div>
+                <div class="price-content-wrap">
+                  <div class="price">￥{{parseFloat(item.o_TotlePrice).toFixed(2)}}</div>
+                  <van-switch :disabled="item.OA_IsTaking==0?false:true" @click="takingOrder($event, item)" v-model="item.OA_IsTaking" size="20" active-color="#1989FA" inactive-color="#ee0a24" />
+                </div>
               </div>
               <div class="order-info-wrap">
                 <div class="order-info-time-content-wrap">
@@ -292,12 +295,28 @@ export default {
       totalSize: 10,
       mmngctUserName: window.sessionStorage.mmngctUserName,
 
-      totalDetailFormList: [],
-
-      timer: null
+      totalDetailFormList: []
     }
   },
   methods: {
+    // 接单按钮
+    async takingOrder (event, item) {
+      const { data: res } = await this.$http.post('OSM/takingOrder', item)
+      if (res.meta.status !== 200) {
+        this.$notify({
+          message: '接单失败!',
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
+        return
+      }
+      this.$notify({
+        message: '接单成功!',
+        background: '#F0F9EB',
+        color: '#67C23A'
+      })
+      this.onRefreshTotal()
+    },
     // 切换tab
     changeTab (name, title) {
       this.totalPayStatus = name
@@ -421,6 +440,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.price-content-wrap {
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  position: relative;
+  /deep/ .van-switch {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-30%, -50%);
+  }
+}
 .order-print-wrap {
   padding-bottom: 10px;/* no */
   padding-left: 5px;/* no */
@@ -500,7 +530,6 @@ export default {
   .price {
     color: #FF601C;
     font-size: 17px;/* no */
-    border-bottom: 1px solid #ddd;
     padding-top: 10px;/* no */
     padding-bottom: 10px;/* no */
   }

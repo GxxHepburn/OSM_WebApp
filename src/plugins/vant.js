@@ -15,7 +15,8 @@ import {
   Card,
   List,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Switch
 } from 'vant'
 
 Vue.use(Button)
@@ -36,3 +37,4 @@ Vue.use(Card)
 Vue.use(List)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Switch)
