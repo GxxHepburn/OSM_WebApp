@@ -87,7 +87,7 @@
                 </div>
                 <!-- 金额 -->
                 <div class="price-content-wrap">
-                  <div class="price">￥{{parseFloat(item.o_TotlePrice).toFixed(2)}}</div>
+                  <div class="price">￥{{parseFloat(item.OA_TotlePrice).toFixed(2)}}</div>
                   <van-switch :disabled="item.OA_IsTaking==0?false:true" @click="takingOrder($event, item)" v-model="item.OA_IsTaking" size="20" active-color="#1989FA" inactive-color="#ee0a24" />
                 </div>
               </div>
