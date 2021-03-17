@@ -60,6 +60,8 @@
             <div class="my_card_wrap" v-for="(item, $index) in totalFormList" :key="$index">
               <div class="tab-wrap">
                 <div class="tab-info">桌号：{{item.TT_Name}}-{{item.t_Name}}</div>
+                <div class="tab-order-first" v-if="item.OA_Sort==1">下单</div>
+                <div class="tab-order-add" v-if="item.OA_Sort!=1">加菜</div>
                 <div class="tab-order-status-0" v-if="item.o_PayStatue===0">未付款</div>
                 <div class="tab-order-status-1" v-if="item.o_PayStatue===1">已完成</div>
                 <div class="tab-order-status-2" v-if="item.o_PayStatue===2">{{item.o_TotlePrice == 0 ? '全额退款' : '部分退款'}}</div>
@@ -388,7 +390,7 @@ export default {
   },
   methods: {
     // searchSubmit
-    async searchSubmit () {
+    searchSubmit () {
       this.showSearch = false
 
       this.totalO_StartString = this.totalO_StartString + ' 00:00:00'
@@ -576,7 +578,7 @@ export default {
       this.totalPageNum++
     },
     // total下拉刷新
-    async onRefreshTotal () {
+    onRefreshTotal () {
       // 初始化查询条件
       this.totalO_UniqSearchID = ''
       this.totalO_StartString = ''
@@ -754,6 +756,28 @@ export default {
     left: 5%;
     transform: translate(0, -50%);
   }
+  .tab-order-first {
+    position: absolute;
+    right: 24%;
+    top: 50%;
+    transform: translate(0, -50%);
+    font-size: 13px;/* no */
+    background-color: #ECF5FF;
+    color: #409EFF;
+    padding: 5px 6px;/* no */
+    border-radius: 3px;/* no */
+  }
+  .tab-order-add {
+    position: absolute;
+    right: 24%;
+    top: 50%;
+    transform: translate(0, -50%);
+    font-size: 13px;/* no */
+    background-color: #FEF0F0;
+    color: #FE6C6C;
+    padding: 5px 6px;/* no */
+    border-radius: 3px;/* no */
+  }
   .tab-order-status-0 {
     position: absolute;
     right: 4%;
@@ -762,7 +786,7 @@ export default {
     font-size: 13px;/* no */
     background-color: #FEF0F0;
     color: #FE6C6C;
-    border: 1px solid #FE6C6C;/* no */
+    // border: 1px solid #FE6C6C;/* no */
     padding: 5px 6px;/* no */
     border-radius: 3px;/* no */
   }
@@ -774,7 +798,7 @@ export default {
     font-size: 13px;/* no */
     background-color: #ECF5FF;
     color: #409EFF;
-    border: 1px solid #409EFF;/* no */
+    // border: 1px solid #409EFF;/* no */
     padding: 5px 6px;/* no */
     border-radius: 3px;/* no */
   }
@@ -786,7 +810,7 @@ export default {
     font-size: 13px;/* no */
     background-color: #FDF6EC;
     color: #EBAA8B;
-    border: 1px solid #EBAA8B;/* no */
+    // border: 1px solid #EBAA8B;/* no */
     padding: 5px 6px;/* no */
     border-radius: 3px;/* no */
   }
@@ -798,7 +822,7 @@ export default {
     font-size: 13px;/* no */
     background-color: #F4F4F5;
     color: #909399;
-    border: 1px solid #909399;/* no */
+    // border: 1px solid #909399;/* no */
     padding: 5px 6px;/* no */
     border-radius: 3px;/* no */
   }
