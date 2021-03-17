@@ -521,7 +521,10 @@ export default {
         mmngctUserName: this.mmngctUserName,
         pagenum: this.totalPageNum,
         pagesize: this.totalSize,
-        totalTabId: this.totalTabId
+        totalTabId: this.totalTabId,
+        OrderStartTime: this.totalO_StartString,
+        OrderEndTime: this.totalO_EndString,
+        O_UniqSearchID: this.totalO_UniqSearchID
       })
       if (res.meta.status !== 200) {
         // 加载失败，点击后重新触发load事件
