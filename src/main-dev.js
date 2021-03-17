@@ -12,6 +12,10 @@ import './assets/fonts/iconfont.css'
 import axios from 'axios'
 axios.defaults.baseURL = 'https://www.donghuastar.com/'
 axios.interceptors.request.use(config => {
+  if (config.headers.Authorization !== undefined && config.headers.Authorization !== '') {
+    return config
+  }
+
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
