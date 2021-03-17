@@ -87,11 +87,15 @@
                       </template>
                       <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderAddDetailFormList" :key="$inIndex">
                         <div class="order_detail_name">{{inItem.OD_FName}}</div>
-                        <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
-                        <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
-                        <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
-                        <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
-                        <div class="order_detail_price">{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}￥</div>
+                        <div v-if="inItem.OD_Spec!=''||inItem.OD_PropOne!=''||inItem.OD_PropTwo!=''">
+                          <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                          <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                          <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        </div>
+                        <div class="order_detail_num_price_wrap">
+                          <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                          <div class="order_detail_price">{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}￥</div>
+                        </div>
                       </div>
                     </van-collapse-item>
                   </van-collapse>
@@ -138,7 +142,18 @@
                       <template #title>
                         <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
                       </template>
-                      内容
+                      <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderDetailFormList" :key="$inIndex">
+                        <div class="order_detail_name">{{inItem.OD_FName}}</div>
+                        <div v-if="inItem.OD_Spec!=''||inItem.OD_PropOne!=''||inItem.OD_PropTwo!=''">
+                          <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                          <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                          <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        </div>
+                        <div class="order_detail_num_price_wrap">
+                          <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                          <div class="order_detail_price">￥{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}</div>
+                        </div>
+                      </div>
                     </van-collapse-item>
                   </van-collapse>
                 </div>
@@ -181,7 +196,18 @@
                       <template #title>
                         <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
                       </template>
-                      内容
+                      <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderDetailFormList" :key="$inIndex">
+                        <div class="order_detail_name">{{inItem.OD_FName}}</div>
+                        <div v-if="inItem.OD_Spec!=''||inItem.OD_PropOne!=''||inItem.OD_PropTwo!=''">
+                          <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                          <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                          <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        </div>
+                        <div class="order_detail_num_price_wrap">
+                          <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                          <div class="order_detail_price">￥{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}</div>
+                        </div>
+                      </div>
                     </van-collapse-item>
                   </van-collapse>
                 </div>
@@ -224,7 +250,18 @@
                       <template #title>
                         <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
                       </template>
-                      内容
+                      <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderDetailFormList" :key="$inIndex">
+                        <div class="order_detail_name">{{inItem.OD_FName}}</div>
+                        <div v-if="inItem.OD_Spec!=''||inItem.OD_PropOne!=''||inItem.OD_PropTwo!=''">
+                          <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                          <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                          <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        </div>
+                        <div class="order_detail_num_price_wrap">
+                          <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                          <div class="order_detail_price">￥{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}</div>
+                        </div>
+                      </div>
                     </van-collapse-item>
                   </van-collapse>
                 </div>
@@ -267,7 +304,18 @@
                       <template #title>
                         <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
                       </template>
-                      内容
+                      <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderDetailFormList" :key="$inIndex">
+                        <div class="order_detail_name">{{inItem.OD_FName}}</div>
+                        <div v-if="inItem.OD_Spec!=''||inItem.OD_PropOne!=''||inItem.OD_PropTwo!=''">
+                          <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                          <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                          <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        </div>
+                        <div class="order_detail_num_price_wrap">
+                          <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                          <div class="order_detail_price">￥{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}</div>
+                        </div>
+                      </div>
                     </van-collapse-item>
                   </van-collapse>
                 </div>
