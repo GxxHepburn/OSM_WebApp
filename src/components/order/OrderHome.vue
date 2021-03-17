@@ -4,7 +4,7 @@
       <van-icon @click="clickShowTabSelect" class="filter_my" name="filter-o" />
       <div class="order_total_title-in">堂 食</div>
       <div class="order_total_title-out">外 卖</div>
-      <van-icon class="search_my" name="search" />
+      <van-icon @click="clickShowSearch" class="search_my" name="search" />
     </div>
     <van-tabs swipeable sticky animated
       color="#fff" title-active-color="#fff"
@@ -272,7 +272,8 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
-    <van-popup get-container=".order_total_container" v-model="showTabSelect" position="right" :style="{ height: '100%', width: '100%' }">
+    <!-- 选择餐桌 -->
+    <van-popup safe-area-inset-bottom get-container=".order_total_container" duration="0.2" v-model="showTabSelect" position="right" :style="{ height: '100%', width: '100%' }">
       <div class="search-container">
         <van-icon @click="hideTabSelect" class="filter_my" name="arrow-left" />
         <span class="tabSelect_title">按桌位搜索</span>
@@ -286,6 +287,65 @@
         @click-item="clickRealSelectTab"
       />
     </van-popup>
+    <!-- 订单号、下单时间检索 -->
+    <van-popup @click-overlay="searchPopupCancel" class="search-van-popup" round duration="0.2" get-container=".order_total_container" v-model="showSearch" position="top" :style="{ height: '31%', width: '100%' }">
+      <van-form @submit="searchSubmit">
+        <van-field
+          v-model="totalO_UniqSearchID"
+          label="订单编号"
+          placeholder="输入订单编号"
+          colon
+          input-align="right"
+          maxlength="35"
+          clickable
+          label-width="65"
+          clearable
+        />
+        <van-field
+          colon
+          input-align="right"
+          readonly
+          clickable
+          clearable
+          :value="totalO_StartString"
+          label="开始时间"
+          placeholder="点击选择时间"
+          @click="showStartPicker = true"
+          label-width="65"
+        />
+        <van-popup v-model="showStartPicker" position="bottom">
+          <van-datetime-picker
+            type="date"
+            @confirm="onStartConfirm"
+            @cancel="showStartPicker = false"
+            v-model="startPicker"
+          />
+        </van-popup>
+        <van-field
+          colon
+          input-align="right"
+          readonly
+          clickable
+          clearable
+          :value="totalO_EndString"
+          label="结束时间"
+          placeholder="点击选择时间"
+          @click="showEndPicker = true"
+          label-width="65"
+        />
+        <van-popup v-model="showEndPicker" position="bottom">
+          <van-datetime-picker
+            type="date"
+            @confirm="onEndConfirm"
+            @cancel="showEndPicker = false"
+            v-model="endPicker"
+          />
+        </van-popup>
+        <div class="search-button-wrap">
+          <van-button size="small" round block type="info" native-type="submit">搜 索</van-button>
+        </div>
+      </van-form>
+    </van-popup>
   </div>
 </template>
 
@@ -293,12 +353,12 @@
 export default {
   data () {
     return {
-
       isTotalRefreshLoading: false,
       isTotalListLoading: false,
       isTotalListFinished: false,
       isTotalListError: false,
       totalFormList: [],
+      totalDetailFormList: [],
 
       totalO_UniqSearchID: '',
       totalO_StartString: '',
@@ -309,19 +369,63 @@ export default {
       totalSize: 10,
       mmngctUserName: window.sessionStorage.mmngctUserName,
 
-      totalDetailFormList: [],
-
       showTabSelect: false,
+      showSearch: false,
 
       tabtypeId: '',
+      tabtypeList: [],
 
-      tabtypeList: []
+      startPicker: '',
+      endPicker: '',
+
+      showStartPicker: false,
+      showEndPicker: false
     }
   },
   created () {
     this.getTabAndTabTypeOptions()
   },
   methods: {
+    // searchSubmit
+    async searchSubmit () {
+    },
+    // onEndConfirm
+    onEndConfirm (time) {
+      this.showEndPicker = false
+      var date = time
+      var day = date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()
+      var month = date.getMonth() <= 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      var year = date.getFullYear()
+      this.totalO_EndString = year + '-' + month + '-' + day
+    },
+    // searchStartConfirm
+    onStartConfirm (time) {
+      this.showStartPicker = false
+      var date = time
+      var day = date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()
+      var month = date.getMonth() <= 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      var year = date.getFullYear()
+      this.totalO_StartString = year + '-' + month + '-' + day
+    },
+    // search-popup-cancel
+    searchPopupCancel () {
+      this.totalO_UniqSearchID = ''
+      this.totalO_StartString = ''
+      this.totalO_EndString = ''
+      this.startPicker = ''
+      this.endPicker = ''
+    },
+    // 点击弹出搜索
+    clickShowSearch () {
+      this.showSearch = true
+      // 获取今日时间
+      var date = new Date()
+      var day = date.getDate() <= 9 ? '0' + date.getDate() : date.getDate()
+      var month = date.getMonth() <= 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      var year = date.getFullYear()
+      this.totalO_EndString = this.totalO_StartString = year + '-' + month + '-' + day
+      this.endPicker = this.startPicker = new Date()
+    },
     // 选择餐桌
     clickRealSelectTab ($data) {
       // 退出
@@ -506,6 +610,27 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .search-button-wrap {
+  position: relative;
+  button {
+    position: absolute;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    font-size: 14px;/* no */
+    font-weight: lighter !important;
+    background: linear-gradient(to right, #FF9829, #FF601C);
+    border: 0;
+  }
+}
+/deep/ .search-van-popup {
+  input {
+    font-size: 10px;/* no */
+  }
+  span {
+    font-weight: bold;
+  }
+}
 .price-content-wrap {
   border-bottom: 1px solid #ddd;
   display: flex;
