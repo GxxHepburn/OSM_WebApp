@@ -74,7 +74,14 @@
                       <template #title>
                         <div><van-icon class="records_icon" name="records" /> <span class="order-detail-info-title">商品详情</span></div>
                       </template>
-                      内容
+                      <div class="order_detail_content" v-for="(inItem,$inIndex) in item.orderAddDetailFormList" :key="$inIndex">
+                        <div class="order_detail_name">{{inItem.OD_FName}}</div>
+                        <div class="order_detail_spec">{{inItem.OD_Spec}}</div>
+                        <div class="order_detail_propOne">{{inItem.OD_PropOne}}</div>
+                        <div class="order_detail_propTwo">{{inItem.OD_PropTwo}}</div>
+                        <div class="order_detail_num">x{{inItem.OD_RealNum}}</div>
+                        <div class="order_detail_price">{{parseFloat(inItem.OD_RealPrice).toFixed(2)}}￥</div>
+                      </div>
                     </van-collapse-item>
                   </van-collapse>
                 </div>
@@ -627,6 +634,39 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.order_detail_content {
+  color: #000;
+  position: relative;
+  border-bottom: 1px dotted #ddd;/* no */
+  margin-bottom: 5px;/* no */
+  .order_detail_name {
+    font-weight: bold;
+    font-size: 12px;/* no */
+    overflow: hidden;/*超出部分隐藏*/
+    white-space: nowrap;/*不换行*/
+    text-overflow:ellipsis;/*超出部分文字以...显示*/
+    margin-bottom: 1px;/* no */
+  }
+  .order_detail_spec {
+    margin-left: 20px;/* no */
+  }
+  .order_detail_spec, .order_detail_propOne, .order_detail_propTwo {
+    font-size: 10px;/* no */
+    display: inline-block;
+    color: #666;
+    margin-left: 10px;/* no */
+  }
+  .order_detail_num {
+    display: inline-block;
+    position: absolute;
+    right: 20%;
+  }
+  .order_detail_price {
+    display: inline-block;
+    position: absolute;
+    right: 0%;
+  }
+}
 /deep/ .search-button-wrap {
   position: relative;
   button {
