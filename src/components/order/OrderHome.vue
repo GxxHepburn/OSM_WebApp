@@ -353,6 +353,7 @@
 export default {
   data () {
     return {
+
       isTotalRefreshLoading: false,
       isTotalListLoading: false,
       isTotalListFinished: false,
@@ -388,6 +389,18 @@ export default {
   methods: {
     // searchSubmit
     async searchSubmit () {
+      this.showSearch = false
+
+      this.totalO_StartString = this.totalO_StartString + ' 00:00:00'
+      this.totalO_EndString = this.totalO_EndString + ' 23:59:59'
+
+      this.totalFormList = []
+      this.totalDetailFormList = []
+      this.totalPageNum = 1
+      this.isTotalListFinished = false
+      this.onTotalListLoad()
+
+      this.totalO_UniqSearchID = ''
     },
     // onEndConfirm
     onEndConfirm (time) {
@@ -529,7 +542,7 @@ export default {
     },
     // 获取数据
     async getOrders () {
-      const { data: res } = await this.$http.post('OSM/getOrderFormList', {
+      const { data: res } = await this.$http.post('OSMAPP/getOrderFormList', {
         mmngctUserName: this.mmngctUserName,
         pagenum: this.totalPageNum,
         pagesize: this.totalSize,
@@ -539,7 +552,6 @@ export default {
         TabId: this.totalTabId,
         O_UniqSearchID: this.totalO_UniqSearchID,
         // 为了兼容osmweb端接口，不用管他
-        touchButton: 1,
         U_OpenId: '',
         TabTypeId: ''
       })
