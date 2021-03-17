@@ -288,7 +288,7 @@
       />
     </van-popup>
     <!-- 订单号、下单时间检索 -->
-    <van-popup @click-overlay="searchPopupCancel" class="search-van-popup" round duration="0.2" get-container=".order_total_container" v-model="showSearch" position="top" :style="{ height: '31%', width: '100%' }">
+    <van-popup @click-overlay="searchPopupCancel" class="search-van-popup" round duration="0.2" get-container=".order_total_container" v-model="showSearch" position="top">
       <van-form @submit="searchSubmit">
         <van-field
           v-model="totalO_UniqSearchID"
@@ -613,10 +613,10 @@ export default {
 /deep/ .search-button-wrap {
   position: relative;
   button {
-    position: absolute;
     width: 90%;
     left: 50%;
-    transform: translate(-50%, 50%);
+    margin-top: 20px;/* no */
+    transform: translate(-50%);
     font-size: 14px;/* no */
     font-weight: lighter !important;
     background: linear-gradient(to right, #FF9829, #FF601C);
@@ -624,6 +624,8 @@ export default {
   }
 }
 /deep/ .search-van-popup {
+  height: 200px;/* no */
+  width: 100%;
   input {
     font-size: 10px;/* no */
   }
