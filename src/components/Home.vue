@@ -14,6 +14,15 @@ export default {
   data () {
     return {
     }
+  },
+  created () {
+    this.openWs()
+  },
+  methods: {
+    openWs () {
+      this.$connectWebSocket.openWebSocket()
+      window.sessionStorage.setItem('isNeedToConnectWebSocket', 1)
+    }
   }
 }
 </script>

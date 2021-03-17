@@ -9,6 +9,12 @@ import './assets/css/global.css'
 // 导入字体图标
 import './assets/fonts/iconfont.css'
 
+// 引入创建webSocket
+import connectWebSocket from './assets/js/connectWebSocket'
+
+// 引入语音播报
+import * as voicePromptFun from './assets/js/voicePrompt'
+
 import axios from 'axios'
 axios.defaults.baseURL = 'https://www.donghuastar.com/'
 axios.interceptors.request.use(config => {
@@ -21,9 +27,19 @@ axios.interceptors.request.use(config => {
 })
 Vue.prototype.$http = axios
 
+Vue.prototype.$connectWebSocket = connectWebSocket
+
+Vue.prototype.$voicePromptFun = voicePromptFun
+
+// 语音播放列表
+Vue.prototype.$voiceList = []
+
 Vue.config.productionTip = false
 
-new Vue({
+var VueThat = new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+export default VueThat
+window.VueThat = VueThat
