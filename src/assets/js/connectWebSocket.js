@@ -4,7 +4,7 @@ function reconnect () {
   }
   if (window.reConNum < 10) {
     // 播报语音，弹出窗口
-    window.VueThat.$voicePromptFun.voicePrompt('与服务器断开连接，正在尝试重新连接')
+    // window.VueThat.$voicePromptFun.voicePrompt('与服务器断开连接，正在尝试重新连接')
     window.reConNum = window.reConNum + 1
     reconnect.lockReconnect = true
     setTimeout(function () {
@@ -16,6 +16,8 @@ function reconnect () {
 function openWebSocket () {
   var name = window.sessionStorage.getItem('mmngctUserName')
   var token = window.sessionStorage.getItem('token')
+
+  // window.VueThat.$voicePromptFun.voicePrompt('连接成功,正在接单')
 
   // 对这两个值加密，然后在服务器端解密-没这个必要，因为请求要先验证token，所以拿到这两个值也没用。再其次，加密之后解密，等于做了无用功！
   if (window.wbss !== undefined && window.wbss.readyState === 1) {
@@ -36,9 +38,6 @@ function openWebSocket () {
       window.VueThat.$voicePromptFun.voicePrompt(data.voiceText)
       // 收款成功，接收收款信息
       // 弹出是否跳转到相应订单提示，5s，不按按钮，则什么不做，按按钮，就跳转到该订单（订单搜索)==============================================================================================================================
-      // if (window.VueThat.$route.path === '/static/orderItemSetting' && window.VueThat.$route.query.O_ID === '' + data.O_ID) {
-      //   window.$bus.$emit('updateOrderItemSetting', 'updateOrderItemSetting')
-      // }
     }
     if (data.type === '3') {
       window.VueThat.$voicePromptFun.voicePrompt(data.voiceText)
@@ -46,13 +45,6 @@ function openWebSocket () {
     if (data.type === '2') {
       window.VueThat.$voicePromptFun.voicePrompt(data.voiceText)
       // 判断是不是在接单界面，如果是，就刷新数据，如果不是，就路由到接单界面====================================================================================================================
-      // if (window.VueThat.$route.path === '/static/nowOrders') {
-      //   window.$bus.$emit('updateOrderTaking', 'updateOrderTaking')
-      // } else {
-      //   window.VueThat.$router.push({
-      //     path: '/static/nowOrders'
-      //   })
-      // }
     }
   })
 
