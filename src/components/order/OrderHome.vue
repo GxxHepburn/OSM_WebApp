@@ -497,7 +497,7 @@ export default {
       this.isTotalListFinished = false
       this.onTotalListLoad()
 
-      this.totalO_UniqSearchID = ''
+      // this.totalO_UniqSearchID = ''
     },
     // onEndConfirm
     onEndConfirm (time) {
