@@ -89,12 +89,22 @@ export default {
         checkNum: ''
       },
       loginForm: {
-        username: 'DianCaiBaoTest',
-        password: 'DianCaiBao123'
+        username: '',
+        password: ''
       }
     }
   },
+  created () {
+    this.initUserAndPassword()
+  },
   methods: {
+    // 从本地读取账户密码
+    initUserAndPassword () {
+      if (localStorage.getItem('dcbUser') !== 'undefined' && localStorage.getItem('dcbUser') !== null) {
+        this.loginForm.username = localStorage.getItem('dcbUser')
+        this.loginForm.password = localStorage.getItem('dcbPassword')
+      }
+    },
     // 发送验证码
     async getCheckNumButtonClick () {
       // 发送获取验证码逻辑,需要携带token（在heaers中)
@@ -216,6 +226,10 @@ export default {
         background: '#F0F9EB',
         color: '#67C23A'
       })
+      // 本地保存账户密码
+      localStorage.setItem('dcbUser', this.loginForm.username)
+      localStorage.setItem('dcbPassword', this.loginForm.password)
+
       // 1. 将登陆之后的 token，保存到客户端的 sessionStorage 中
       //  1.1 项目中除了登陆之外的其他API接口，必须在登陆之后才能访问
       //  1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
