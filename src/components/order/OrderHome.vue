@@ -58,7 +58,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large" @click="clickPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large" @click="clicknotTakingPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -171,7 +171,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large"  @click="clickPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -225,7 +225,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large"  @click="clickPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -279,7 +279,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large"  @click="clickPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -333,7 +333,7 @@
                 </div>
               </div>
               <div class="order-print-wrap">
-                <van-button size="large">打印</van-button>
+                <van-button size="large" @click="clickPrint($event, item)">打印</van-button>
               </div>
             </div>
           </van-list>
@@ -455,6 +455,35 @@ export default {
     this.getTabAndTabTypeOptions()
   },
   methods: {
+    // 未接单打印
+    async clicknotTakingPrint ($event, item) {
+      const { data: res } = await this.$http.post('OSMAPP/notTakingPrintTickt', {
+        mmngctUserName: window.sessionStorage.mmngctUserName,
+        O_ID: item.o_ID,
+        OA_ID: item.OA_ID
+      })
+      if (res.meta.status !== 200) {
+        this.$notify({
+          message: '打印失败，请检查网络连接或重启APP!',
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
+      }
+    },
+    // 打印
+    async clickPrint ($event, item) {
+      const { data: res } = await this.$http.post('OSMAPP/printTickt', {
+        mmngctUserName: window.sessionStorage.mmngctUserName,
+        O_ID: item.O_ID
+      })
+      if (res.meta.status !== 200) {
+        this.$notify({
+          message: '打印失败，请检查网络连接或重启APP!',
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
+      }
+    },
     // searchSubmit
     searchSubmit () {
       this.showSearch = false
@@ -530,7 +559,11 @@ export default {
         mmngctUserName: window.sessionStorage.mmngctUserName
       })
       if (res.meta.status !== 200) {
-        this.$message.error('获取餐桌数据失败!')
+        this.$notify({
+          message: '获取餐桌数据失败!！',
+          background: '#FEF0F0',
+          color: '#F56C6C'
+        })
         return
       }
       this.tabtypeList = res.data.ordersTabAndTabTypeOptions
