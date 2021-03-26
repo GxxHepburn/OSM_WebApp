@@ -198,6 +198,11 @@ export default {
     async login () {
       const { data: res } = await this.$http.post('OSM/login', this.loginForm)
       if (res.meta.status !== 200) {
+        // 判断商家是否被ban
+        if (res.meta.status === 402) {
+          this.$message.error('餐厅已下架,请联系管理员!')
+          return
+        }
         if (res.meta.status === 401) {
           this.$notify({
             message: '请输入正确的用户名和密码！',
