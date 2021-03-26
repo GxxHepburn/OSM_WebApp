@@ -16,7 +16,7 @@ import connectWebSocket from './assets/js/connectWebSocket'
 import * as voicePromptFun from './assets/js/voicePrompt'
 
 import axios from 'axios'
-axios.defaults.baseURL = 'https://www.donghuastar.com/'
+axios.defaults.baseURL = 'http://localhost'
 axios.interceptors.request.use(config => {
   if (config.headers.Authorization !== undefined && config.headers.Authorization !== '') {
     return config

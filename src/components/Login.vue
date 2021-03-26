@@ -200,7 +200,11 @@ export default {
       if (res.meta.status !== 200) {
         // 判断商家是否被ban
         if (res.meta.status === 402) {
-          this.$message.error('餐厅已下架,请联系管理员!')
+          this.$notify({
+            message: '餐厅已下架,请联系管理员!',
+            background: '#FEF0F0',
+            color: '#F56C6C'
+          })
           return
         }
         if (res.meta.status === 401) {
